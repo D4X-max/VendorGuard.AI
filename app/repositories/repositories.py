@@ -15,7 +15,7 @@ from app.models.all_models import (
     Questionnaire, Question, Finding, Remediation,
     AuditLog, AIUsageLog,
 )
-from app.core.security import hash_password
+from app.core.security import get_password_hash
 
 
 # =========================================================================

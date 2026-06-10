@@ -6,7 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.security import decode_token
 from app.db.session import get_tenant_session
-
+from app.core.config import settings
 bearer_scheme = HTTPBearer()
 
 

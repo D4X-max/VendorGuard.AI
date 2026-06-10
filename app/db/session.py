@@ -5,7 +5,7 @@ from sqlalchemy.ext.asyncio import (
 )
 from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy import text
-from app.config import settings
+from app.core.config import settings
 
 
 # ─────────────────────────────────────────────
@@ -54,8 +54,7 @@ async def get_tenant_session(tenant_id: str):
     async with AsyncSessionFactory() as session:
         try:
             await session.execute(
-                text("SET LOCAL app.current_tenant_id = :tid"),
-                {"tid": str(tenant_id)},
+                text(f"SET LOCAL app.current_tenant_id = '{tenant_id}'")
             )
             yield session
             await session.commit()

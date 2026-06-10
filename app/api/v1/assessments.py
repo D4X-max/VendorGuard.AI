@@ -2,7 +2,9 @@ from uuid import UUID
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.core.dependencies import get_current_user, get_db, AuthenticatedUser
+from app.api.dependencies.auth import get_current_active_user as get_current_user
+from app.api.dependencies.database import get_tenant_session as get_db
+from app.domain.schemas.user import UserInDB as AuthenticatedUser
 from app.repositories.repositories import QuestionnaireRepository, VendorRepository
 from app.schemas.schemas import (
     QuestionnaireCreateRequest, QuestionnaireResponse,

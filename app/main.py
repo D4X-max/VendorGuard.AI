@@ -1,9 +1,26 @@
+from contextlib import asynccontextmanager
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
-from app.config import settings
-from app.api.v1 import auth, vendors, assessments, findings
+from app.core.config import settings
+from app.core.logging import setup_logging
+
+# Old v1 routers (assessments, findings — not yet migrated to clean arch)
+from app.api.v1 import assessments, findings
+
+# New clean architecture routers
+from app.api.routers import auth, vendors
+
+
+# ─────────────────────────────────────────────
+# Lifespan — runs on startup/shutdown
+# ─────────────────────────────────────────────
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    setup_logging()
+    yield
+
 
 # ─────────────────────────────────────────────
 # App Initialization
@@ -15,7 +32,9 @@ app = FastAPI(
     docs_url="/api/docs",
     redoc_url="/api/redoc",
     openapi_url="/api/openapi.json",
+    lifespan=lifespan,
 )
+
 
 # ─────────────────────────────────────────────
 # CORS Middleware
@@ -28,6 +47,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 # ─────────────────────────────────────────────
 # Global Exception Handler
 # ─────────────────────────────────────────────
@@ -38,15 +58,20 @@ async def global_exception_handler(request: Request, exc: Exception):
         content={"detail": "An internal server error occurred."},
     )
 
+
 # ─────────────────────────────────────────────
 # API Routers
 # ─────────────────────────────────────────────
 API_PREFIX = "/api/v1"
 
+# Clean architecture routers (Phase 4 spec)
 app.include_router(auth.router,        prefix=API_PREFIX)
 app.include_router(vendors.router,     prefix=API_PREFIX)
+
+# Legacy v1 routers — to be migrated to service layer in later phases
 app.include_router(assessments.router, prefix=API_PREFIX)
 app.include_router(findings.router,    prefix=API_PREFIX)
+
 
 # ─────────────────────────────────────────────
 # Health Check
