@@ -10,7 +10,9 @@ from app.core.logging import setup_logging
 from app.api.v1 import assessments, findings
 
 # New clean architecture routers
-from app.api.routers import auth, vendors
+from app.api.routers import auth, vendors, evidence
+
+
 
 
 # ─────────────────────────────────────────────
@@ -67,10 +69,11 @@ API_PREFIX = "/api/v1"
 # Clean architecture routers (Phase 4 spec)
 app.include_router(auth.router,        prefix=API_PREFIX)
 app.include_router(vendors.router,     prefix=API_PREFIX)
-
+app.include_router(evidence.router, prefix=API_PREFIX)
 # Legacy v1 routers — to be migrated to service layer in later phases
 app.include_router(assessments.router, prefix=API_PREFIX)
 app.include_router(findings.router,    prefix=API_PREFIX)
+
 
 
 # ─────────────────────────────────────────────

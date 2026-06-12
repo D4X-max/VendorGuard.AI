@@ -249,6 +249,7 @@ class EvidenceDocument(Base):
     mime_type: Mapped[str] = mapped_column(String(100), nullable=False)
     sha256_checksum: Mapped[str] = mapped_column(String(64), nullable=False)
     uploaded_by: Mapped[Optional[uuid.UUID]] = mapped_column(UUID(as_uuid=True), ForeignKey("users.id", ondelete="SET NULL"))
+    processing_status: Mapped[str] = mapped_column(String(50), nullable=False, default="PENDING")
     created_at: Mapped[datetime] = mapped_column(TIMESTAMP(timezone=True), server_default=func.now())
 
     chunks: Mapped[list["DocumentChunk"]] = relationship("DocumentChunk", back_populates="document")
