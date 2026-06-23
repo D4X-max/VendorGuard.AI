@@ -27,7 +27,7 @@ class Settings(BaseSettings):
     APP_ENV: str = "development"
     APP_NAME: str = "VendorGuard.AI"
     APP_VERSION: str = "1.0.0"
-    CORS_ORIGINS: str = "http://localhost:3000,http://localhost:5173"
+    CORS_ORIGINS: str = "http://localhost:3000,http://localhost:5173,http://localhost:5174"
     
     OPENAI_API_KEY: str = "sk-placeholder"
     LOCAL_STORAGE_DIR: str = "./local_s3_storage"

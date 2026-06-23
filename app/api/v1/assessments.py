@@ -49,7 +49,7 @@ async def create_questionnaire(
         title=body.title,
         due_date=body.due_date,
         questions_data=questions_data,
-        analyst_id=current_user.user_id,
+        analyst_id=current_user.id,
     )
 
     result = await QuestionnaireRepository.get_by_id(

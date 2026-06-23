@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, Request, Response
+from fastapi import APIRouter, Depends, Request, Response, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.dependencies.database import get_db_session
@@ -62,5 +62,13 @@ async def refresh(
 
 
 @router.get("/me", response_model=UserResponse)
-async def get_me(current_user: UserInDB = Depends(get_current_active_user)):
-    return current_user
+async def get_me(
+    current_user: UserInDB = Depends(get_current_active_user),
+    session: AsyncSession = Depends(get_db_session),
+):
+    from app.domain.repositories.user_repo import UserRepository
+    repo = UserRepository(session)
+    user = await repo.get_by_id(current_user.id)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found.")
+    return UserResponse.model_validate(user)

@@ -55,7 +55,7 @@ async def create_finding(
     await AuditRepository.log(
         db,
         tenant_id=current_user.tenant_id,
-        user_id=current_user.user_id,
+        user_id=current_user.id,
         user_email=current_user.email,
         action="FINDING_CREATED",
         entity_target="findings",
